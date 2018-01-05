@@ -13,6 +13,7 @@ func main() {
 	router := mux.NewRouter()
 
 	db.Init()
+	defer db.GetDB().Db.Close()
 	pessoal := new(controllers.PessoalController)
 
 	router.HandleFunc("/pessoal", pessoal.GetPessoal).Methods("GET")
