@@ -16,7 +16,7 @@ func main() {
 	defer db.GetDB().Db.Close()
 	pessoal := new(controllers.PessoalController)
 
-	router.HandleFunc("/pessoal", pessoal.GetPessoal).Methods("GET")
+	router.HandleFunc("/api/pessoal", pessoal.GetPessoal).Methods("GET")
 	// router.HandleFunc("/resources", CreateResource).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":8080", router))
