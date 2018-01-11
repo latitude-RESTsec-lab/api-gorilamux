@@ -16,8 +16,8 @@ func main() {
 	defer db.GetDB().Db.Close()
 	pessoal := new(controllers.PessoalController)
 
-	router.HandleFunc("/api/pessoal", pessoal.GetPessoal).Methods("GET")
-	// router.HandleFunc("/resources", CreateResource).Methods("POST")
+	router.HandleFunc("/api/servidores", pessoal.GetPessoal).Methods("GET")
+	router.HandleFunc("/api/servidor/{matricula:[0-9]+}", pessoal.GetPessoalMat).Methods("GET") // URL parameter with Regex in URL
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
