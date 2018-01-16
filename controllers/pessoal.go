@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Pessoal struct {
+type Servidor struct {
 	ID                 int    `db:"id, primarykey, autoincrement" json:"id"`
 	Siape              string `db:"siape" json:"siape"`
 	Id_pessoa          int    `db:"id_pessoa" json:"id_pessoa"`
@@ -21,9 +21,9 @@ type Pessoal struct {
 	Sexo               string `db:"sexo" json:"sexo"`
 }
 
-type PessoalController struct{}
+type ServidorController struct{}
 
-func (ctrl PessoalController) GetPessoal(w http.ResponseWriter, r *http.Request) {
+func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Request) {
 	q := `select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao,
 		p.nome, p.data_nascimento, p.sexo from rh.servidor s
 	inner join comum.pessoa p on (s.id_pessoa = p.id_pessoa)`
@@ -34,7 +34,7 @@ func (ctrl PessoalController) GetPessoal(w http.ResponseWriter, r *http.Request)
 	}
 	defer rows.Close()
 
-	var pessoas []Pessoal
+	var pessoas []Servidor
 
 	var id, id_pessoa int
 	var siape, nome, matricula_interna, nome_identificacao, data_nascimento, sexo string
@@ -44,7 +44,7 @@ func (ctrl PessoalController) GetPessoal(w http.ResponseWriter, r *http.Request)
 			log.Fatal(err)
 		}
 
-		pessoas = append(pessoas, Pessoal{
+		pessoas = append(pessoas, Servidor{
 			ID:                 id,
 			Siape:              siape,
 			Id_pessoa:          id_pessoa,
@@ -67,7 +67,7 @@ func (ctrl PessoalController) GetPessoal(w http.ResponseWriter, r *http.Request)
 	return
 }
 
-func (ctrl PessoalController) GetPessoalMat(w http.ResponseWriter, r *http.Request) {
+func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	mat := vars["matricula"] // URL parameter
 	// Data security checking to be insterted here
@@ -82,7 +82,7 @@ func (ctrl PessoalController) GetPessoalMat(w http.ResponseWriter, r *http.Reque
 	}
 	defer rows.Close()
 
-	var pessoas []Pessoal
+	var pessoas []Servidor
 
 	var id, id_pessoa int
 	var siape, nome, matricula_interna, nome_identificacao, data_nascimento, sexo string
@@ -92,7 +92,7 @@ func (ctrl PessoalController) GetPessoalMat(w http.ResponseWriter, r *http.Reque
 			log.Fatal(err)
 		}
 
-		pessoas = append(pessoas, Pessoal{
+		pessoas = append(pessoas, Servidor{
 			ID:                 id,
 			Siape:              siape,
 			Id_pessoa:          id_pessoa,
