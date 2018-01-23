@@ -47,7 +47,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	}
 	defer rows.Close()
 
-	var pessoas []Servidor
+	var servidores []Servidor
 
 	var id, idpessoa, matriculainterna, siape int
 	var nome, nomeidentificacao, datanascimento, sexo string
@@ -62,14 +62,15 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 			return
 		}
 
-		pessoas = append(pessoas, Servidor{
+		date, _ := time.Parse("1969-02-12", datanascimento)
+		servidores = append(servidores, Servidor{
 			ID:                id,
 			Siape:             siape,
 			Idpessoa:          idpessoa,
 			Nome:              nome,
 			Matriculainterna:  matriculainterna,
 			Nomeidentificacao: nomeidentificacao,
-			Datanascimento:    datanascimento,
+			Datanascimento:    date.Format("1969-02-12"),
 			Sexo:              sexo,
 		})
 	}
@@ -82,7 +83,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	w.WriteHeader(200)
-	json.NewEncoder(w).Encode(&pessoas)
+	json.NewEncoder(w).Encode(&servidores)
 
 	if err != nil {
 		log.Println(err)
@@ -116,7 +117,7 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 	}
 	defer rows.Close()
 
-	var pessoas []Servidor
+	var servidores []Servidor
 
 	var id, idpessoa, matriculainterna, siape int
 	var nome, nomeidentificacao, datanascimento, sexo string
@@ -131,14 +132,15 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		pessoas = append(pessoas, Servidor{
+		date, _ := time.Parse("1969-02-12", datanascimento)
+		servidores = append(servidores, Servidor{
 			ID:                id,
 			Siape:             siape,
 			Idpessoa:          idpessoa,
 			Nome:              nome,
 			Matriculainterna:  matriculainterna,
 			Nomeidentificacao: nomeidentificacao,
-			Datanascimento:    datanascimento,
+			Datanascimento:    date.Format("1969-02-12"),
 			Sexo:              sexo,
 		})
 	}
@@ -150,7 +152,7 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 		})
 		return
 	}
-	json.NewEncoder(w).Encode(&pessoas)
+	json.NewEncoder(w).Encode(&servidores)
 
 	if err != nil {
 		log.Println(err)
@@ -181,7 +183,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	}
 
 	// REGEX CHEKING PHASE
-	regex, _ := regexp.Compile(`^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])Z$`)
+	regex, _ := regexp.Compile(`^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)$`)
 	if !regex.MatchString(ser.Datanascimento) {
 		regexcheck = true
 		Reasons = append(Reasons, ErrorBody{
@@ -239,7 +241,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 
 	defer rows.Close()
 
-	// var pessoas []Servidor
+	// var servidores []Servidor
 	w.WriteHeader(200)
 
 	// if err != nil {
