@@ -38,7 +38,12 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: err.Error(),
+		})
+		return
 	}
 	defer rows.Close()
 
@@ -49,7 +54,12 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	for rows.Next() {
 		err := rows.Scan(&id, &siape, &id_pessoa, &matricula_interna, &nome_identificacao, &nome, &data_nascimento, &sexo)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			w.WriteHeader(400)
+			json.NewEncoder(w).Encode(ErrorBody{
+				Reason: err.Error(),
+			})
+			return
 		}
 
 		pessoas = append(pessoas, Servidor{
@@ -64,11 +74,22 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 		})
 	}
 	if err := rows.Err(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: err.Error(),
+		})
+		return
 	}
+	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(&pessoas)
 
 	if err != nil {
+		log.Println(err)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: err.Error(),
+		})
 		return
 	}
 
@@ -86,7 +107,12 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: err.Error(),
+		})
+		return
 	}
 	defer rows.Close()
 
@@ -97,7 +123,12 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 	for rows.Next() {
 		err := rows.Scan(&id, &siape, &id_pessoa, &matricula_interna, &nome_identificacao, &nome, &data_nascimento, &sexo)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			w.WriteHeader(400)
+			json.NewEncoder(w).Encode(ErrorBody{
+				Reason: err.Error(),
+			})
+			return
 		}
 
 		pessoas = append(pessoas, Servidor{
@@ -112,11 +143,21 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 		})
 	}
 	if err := rows.Err(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: err.Error(),
+		})
+		return
 	}
 	json.NewEncoder(w).Encode(&pessoas)
 
 	if err != nil {
+		log.Println(err)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: err.Error(),
+		})
 		return
 	}
 
@@ -205,7 +246,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
-		log.Println(errDecode)
+		log.Println(err)
 		w.WriteHeader(400)
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
