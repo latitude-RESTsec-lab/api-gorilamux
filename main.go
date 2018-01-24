@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
-	"pessoalAPI-gorilamux/controllers"
-	"pessoalAPI-gorilamux/db"
+
+	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
+
+	"github.com/latitude-RESTsec-lab/api-gorilamux/controllers"
 
 	"github.com/gorilla/mux"
 )

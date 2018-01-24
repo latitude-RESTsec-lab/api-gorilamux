@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"pessoalAPI-gorilamux/db"
 	"regexp"
 	"time"
+
+	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
 
 	"github.com/gorilla/mux"
 )
