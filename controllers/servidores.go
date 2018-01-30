@@ -15,10 +15,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//ErrorBody structure is used to improve error reporting in a JSON response body
 type ErrorBody struct {
 	Reason string `json:"reason"`
 }
 
+//Servidor structure is used to store data used by this API
 type Servidor struct {
 	ID                int    `db:"id, primarykey, autoincrement" json:"id"`
 	Siape             int    `db:"siape" json:"siape"`
@@ -30,8 +32,10 @@ type Servidor struct {
 	Sexo              string `db:"sexo" json:"sexo"`
 }
 
+//ServidorController is used to export the API handler functions
 type ServidorController struct{}
 
+//GetServidor funtion returns the full list of "servidores" in the database
 func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Request) {
 	q := `select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao,
 		p.nome, p.data_nascimento, p.sexo from rh.servidor s
@@ -92,6 +96,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	return
 }
 
+//GetServidor funtion returns the "servidor" matching a given id
 func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	mat := vars["matricula"] // URL parameter
@@ -157,6 +162,7 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 	return
 }
 
+//PostServidor function reads a JSON body and store it in the database
 func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Request) {
 	regexcheck := false
 	var ser Servidor
