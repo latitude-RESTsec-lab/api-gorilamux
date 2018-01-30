@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
 
@@ -12,6 +14,12 @@ import (
 )
 
 func main() {
+	file, fileErr := os.Create("server.log")
+	if fileErr != nil {
+		fmt.Println(fileErr)
+		file = os.Stdout
+	}
+	log.SetOutput(file)
 
 	db.Init()
 	defer db.GetDB().Db.Close()
