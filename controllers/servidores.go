@@ -44,6 +44,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
+		log.Print("[MUX] " + " | 500 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 	defer rows.Close()
@@ -60,6 +61,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 			json.NewEncoder(w).Encode(ErrorBody{
 				Reason: err.Error(),
 			})
+			log.Print("[MUX] " + " | 500 | " + r.Method + "  " + r.URL.Path)
 			return
 		}
 
@@ -81,11 +83,12 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
+		log.Print("[MUX] " + " | 500 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(&servidores)
-
+	log.Print("[MUX] " + " | 200 | " + r.Method + "  " + r.URL.Path)
 	return
 }
 
@@ -105,6 +108,8 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
+
+		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 	defer rows.Close()
@@ -121,6 +126,7 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 			json.NewEncoder(w).Encode(ErrorBody{
 				Reason: err.Error(),
 			})
+			log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 			return
 		}
 
@@ -142,19 +148,12 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
+		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
+	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(&servidores)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(ErrorBody{
-			Reason: err.Error(),
-		})
-		return
-	}
-
+	log.Print("[MUX] " + " | 200 | " + r.Method + "  " + r.URL.Path)
 	return
 }
 
@@ -171,6 +170,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: errDecode.Error(),
 		})
+		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 
@@ -206,6 +206,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	if regexcheck {
 		w.WriteHeader(400)
 		json.NewEncoder(w).Encode(&Reasons)
+		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 	// END OF REGEX CHEKING PHASE
@@ -228,17 +229,14 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
+		log.Print("[MUX] " + " | 500 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 
 	defer rows.Close()
 
-	// var servidores []Servidor
 	w.WriteHeader(201)
-
-	// if err != nil {
-	// 	return
-	// }
+	log.Print("[MUX] " + " | 201 | " + r.Method + "  " + r.URL.Path)
 
 	return
 }
