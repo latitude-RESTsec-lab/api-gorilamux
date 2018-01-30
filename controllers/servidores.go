@@ -40,7 +40,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
 		log.Println(err)
-		w.WriteHeader(400)
+		w.WriteHeader(500)
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
@@ -56,7 +56,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 		err := rows.Scan(&id, &siape, &idpessoa, &matriculainterna, &nomeidentificacao, &nome, &datanascimento, &sexo)
 		if err != nil {
 			log.Println(err)
-			w.WriteHeader(400)
+			w.WriteHeader(500)
 			json.NewEncoder(w).Encode(ErrorBody{
 				Reason: err.Error(),
 			})
@@ -77,7 +77,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	}
 	if err := rows.Err(); err != nil {
 		log.Println(err)
-		w.WriteHeader(400)
+		w.WriteHeader(500)
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
@@ -85,15 +85,6 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	}
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(&servidores)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(ErrorBody{
-			Reason: err.Error(),
-		})
-		return
-	}
 
 	return
 }
@@ -188,7 +179,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	if !regex.MatchString(ser.Datanascimento) {
 		regexcheck = true
 		Reasons = append(Reasons, ErrorBody{
-			Reason: "[data_nascimento] failed to match API requirements. It should look like this: 1969-02-12T00:00:00Z",
+			Reason: "[data_nascimento] failed to match API requirements. It should look like this: 1969-02-12",
 		})
 	}
 	regex, _ = regexp.Compile(`^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$`)
@@ -233,7 +224,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
 		log.Println(err)
-		w.WriteHeader(400)
+		w.WriteHeader(500)
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
@@ -243,7 +234,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	defer rows.Close()
 
 	// var servidores []Servidor
-	w.WriteHeader(200)
+	w.WriteHeader(201)
 
 	// if err != nil {
 	// 	return
