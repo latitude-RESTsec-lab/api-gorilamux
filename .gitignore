@@ -11,4 +11,6 @@ pessoalAPI
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-pessoalAPI-gorilamux
+*.key
+*.pem
+*.log
