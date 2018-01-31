@@ -42,7 +42,7 @@ func ConnectDB(dataSourceName string) (*gorp.DbMap, error) {
 		return nil, err
 	}
 	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
-	dbmap.TraceOn("[gorp]", log.New(config.LogFile, "golang-MUX:", log.Lmicroseconds)) //Trace database requests
+	dbmap.TraceOn("[DB-MUX]", log.New(config.LogFile, "golang-MUX:", log.Lmicroseconds)) //Trace database requests
 	return dbmap, nil
 }
 
