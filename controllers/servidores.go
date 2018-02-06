@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
@@ -219,13 +220,13 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	timestamp := time.Now().UTC().Format("2006-01-02T15:04:05-0700")
 	b := md5.Sum([]byte(fmt.Sprintf(string(ser.Nome), string(timestamp))))
 	bid := binary.BigEndian.Uint64(b[:])
-
+	ser.Matriculainterna = int(bid % 9999999)
 	q := fmt.Sprintf(`
 		INSERT INTO rh.servidor_tmp(
 			nome, nome_identificacao, siape, id_pessoa, matricula_interna, id_foto,
 			data_nascimento, sexo)
 			VALUES ('%s', '%s', %d, %d, %d, null, '%s', '%s');
-			`, ser.Nome, ser.Nomeidentificacao, ser.Siape, ser.Idpessoa, bid%9999999,
+			`, ser.Nome, ser.Nomeidentificacao, ser.Siape, ser.Idpessoa, ser.Matriculainterna,
 		ser.Datanascimento, ser.Sexo) //String formating
 
 	rows, err := db.GetDB().Query(q)
@@ -240,7 +241,7 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	}
 
 	defer rows.Close()
-
+	w.Header().Add("location", r.URL.Host+"/api/servidor/"+strconv.Itoa(ser.Matriculainterna))
 	w.WriteHeader(201)
 	log.Print("[MUX] " + " | 201 | " + r.Method + "  " + r.URL.Path)
 
