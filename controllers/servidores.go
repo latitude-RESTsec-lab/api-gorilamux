@@ -11,9 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
-
 	"github.com/gorilla/mux"
+	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
 )
 
 //ErrorBody structure is used to improve error reporting in a JSON response body
@@ -41,7 +40,6 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	q := `select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao,
 		p.nome, p.data_nascimento, p.sexo from rh.servidor s
 	inner join comum.pessoa p on (s.id_pessoa = p.id_pessoa)`
-
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
 		log.Println(err)
@@ -53,9 +51,7 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	defer rows.Close()
-
 	var servidores []Servidor
-
 	var id, idpessoa, matriculainterna, siape int
 	var nome, nomeidentificacao, datanascimento, sexo string
 	for rows.Next() {
@@ -69,7 +65,6 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 			log.Print("[MUX] " + " | 500 | " + r.Method + "  " + r.URL.Path)
 			return
 		}
-
 		date, _ := time.Parse("1969-02-12", datanascimento)
 		servidores = append(servidores, Servidor{
 			ID:                id,
@@ -97,16 +92,14 @@ func (ctrl ServidorController) GetServidor(w http.ResponseWriter, r *http.Reques
 	return
 }
 
-//GetServidor funtion returns the "servidor" matching a given id
+//GetServidorMat funtion returns the "servidor" matching a given id
 func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	mat := vars["matricula"] // URL parameter
 	// Data security checking to be insterted here
-
 	q := fmt.Sprintf(`select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao,
 		p.nome, p.data_nascimento, p.sexo from rh.servidor s
 		inner join comum.pessoa p on (s.id_pessoa = p.id_pessoa) where s.matricula_interna = %s`, mat) //String formating
-
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
 		log.Println(err)
@@ -114,14 +107,11 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 		json.NewEncoder(w).Encode(ErrorBody{
 			Reason: err.Error(),
 		})
-
 		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
 	defer rows.Close()
-
 	var servidores []Servidor
-
 	var id, idpessoa, matriculainterna, siape int
 	var nome, nomeidentificacao, datanascimento, sexo string
 	for rows.Next() {
@@ -135,7 +125,6 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 			log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 			return
 		}
-
 		date, _ := time.Parse("1969-02-12", datanascimento)
 		servidores = append(servidores, Servidor{
 			ID:                id,
@@ -170,7 +159,6 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	var Reasons []ErrorBody
 	decoder := json.NewDecoder(r.Body)
 	errDecode := decoder.Decode(&ser)
-
 	if errDecode != nil {
 		log.Println(errDecode)
 		w.WriteHeader(400)
@@ -180,7 +168,6 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
-
 	// REGEX CHEKING PHASE
 	regex, _ := regexp.Compile(`^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)$`)
 	if !regex.MatchString(ser.Datanascimento) {
@@ -228,7 +215,6 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 			VALUES ('%s', '%s', %d, %d, %d, null, '%s', '%s');
 			`, ser.Nome, ser.Nomeidentificacao, ser.Siape, ser.Idpessoa, ser.Matriculainterna,
 		ser.Datanascimento, ser.Sexo) //String formating
-
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
 		log.Println(err)
@@ -239,11 +225,9 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 		log.Print("[MUX] " + " | 500 | " + r.Method + "  " + r.URL.Path)
 		return
 	}
-
 	defer rows.Close()
 	w.Header().Add("location", r.URL.Host+"/api/servidor/"+strconv.Itoa(ser.Matriculainterna))
 	w.WriteHeader(201)
 	log.Print("[MUX] " + " | 201 | " + r.Method + "  " + r.URL.Path)
-
 	return
 }
