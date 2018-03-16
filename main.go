@@ -33,6 +33,7 @@ func main() {
 	httpsRouter.HandleFunc("/api/servidores", Servidor.GetServidor).Methods("GET")
 	httpsRouter.HandleFunc("/api/servidor/", Servidor.PostServidor).Methods("POST")
 	httpsRouter.HandleFunc("/api/servidor/{matricula:[0-9]+}", Servidor.GetServidorMat).Methods("GET") // URL parameter with Regex in URL
+	httpsRouter.HandleFunc("/api/calculo/", Servidor.Calculate).Methods("POST")
 	err = http.ListenAndServeTLS(":"+config.ConfigParams.HttpsPort, config.ConfigParams.TLSCertLocation, config.ConfigParams.TLSKeyLocation, httpsRouter)
 	if err != nil {
 		fmt.Println(err.Error())

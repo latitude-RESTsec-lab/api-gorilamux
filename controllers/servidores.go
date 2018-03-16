@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -18,6 +19,10 @@ import (
 //ErrorBody structure is used to improve error reporting in a JSON response body
 type ErrorBody struct {
 	Reason string `json:"reason"`
+}
+
+type Result struct {
+	Result float64 `json:"Result"`
 }
 
 //Servidor structure is used to store data used by this API
@@ -230,4 +235,47 @@ func (ctrl ServidorController) PostServidor(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(201)
 	log.Print("[MUX] " + " | 201 | " + r.Method + "  " + r.URL.Path)
 	return
+}
+
+func (ctrl ServidorController) Calculate(w http.ResponseWriter, r *http.Request) {
+	var matrix [][]float64
+	//matrixTwo := make([][]float64, 10)
+	decoder := json.NewDecoder(r.Body)
+	errDecode := decoder.Decode(&matrix)
+	if errDecode != nil {
+		log.Println(errDecode)
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(ErrorBody{
+			Reason: errDecode.Error(),
+		})
+		log.Print("[MUX] " + " | 400 | " + r.Method + "  " + r.URL.Path)
+		return
+	}
+	matrix = calc(matrix)
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(Result{
+		Result: sum(matrix),
+	})
+}
+func calc(matrix [][]float64) [][]float64 {
+	for rowIndex, row := range matrix {
+		relSum := 0.0
+		for _, element := range row {
+			relSum += math.Pow(element, 2)
+		}
+		relSum = relSum / float64(len(row))
+		for index, element := range row {
+			matrix[rowIndex][index] = math.Sqrt(element * relSum)
+		}
+	}
+	return matrix
+}
+func sum(matrix [][]float64) float64 {
+	relSum := 0.0
+	for _, row := range matrix {
+		for _, element := range row {
+			relSum += element
+		}
+	}
+	return relSum
 }
