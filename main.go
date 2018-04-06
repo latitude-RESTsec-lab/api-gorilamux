@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
+	"github.com/restsec/api-gorilamux/db"
 
-	"github.com/latitude-RESTsec-lab/api-gorilamux/config"
-	"github.com/latitude-RESTsec-lab/api-gorilamux/controllers"
+	"github.com/restsec/api-gorilamux/config"
+	"github.com/restsec/api-gorilamux/controllers"
 
 	"github.com/gorilla/mux"
 )

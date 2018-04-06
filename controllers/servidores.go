@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/latitude-RESTsec-lab/api-gorilamux/db"
+	"github.com/restsec/api-gorilamux/db"
 )
 
 //ErrorBody structure is used to improve error reporting in a JSON response body
