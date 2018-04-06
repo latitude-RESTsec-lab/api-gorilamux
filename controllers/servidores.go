@@ -104,7 +104,7 @@ func (ctrl ServidorController) GetServidorMat(w http.ResponseWriter, r *http.Req
 	// Data security checking to be insterted here
 	q := fmt.Sprintf(`select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao,
 		p.nome, p.data_nascimento, p.sexo from rh.servidor s
-		inner join comum.pessoa p on (s.id_pessoa = p.id_pessoa) where s.matricula_interna = %s`, mat) //String formating
+		inner join comum.pessoa p on (s.id_pessoa = p.id_pessoa) where s.siape = %s`, mat) //String formating
 	rows, err := db.GetDB().Query(q)
 	if err != nil {
 		log.Println(err)
