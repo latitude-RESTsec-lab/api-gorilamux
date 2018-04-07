@@ -1,24 +1,29 @@
 #Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM golang
+FROM golang:alpine
+
+#ENV http_proxy 'http://10.30.0.10:3128'
+#ENV https_proxy 'https://10.30.0.10:3128'
+
+RUN apk add --no-cache --virtual git 
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/github.com/latitude-RESTsec-lab/api-gorilamux
+ADD . /go/src/github.com/restsec/api-gorilamux
 
 # # Build the outyet command inside the container.
 # # (You may fetch or manage dependencies here,
 # # either manually or with a tool like "godep".)
 #RUN HTTPS_PROXY=https://10.30.0.10:3128 go get -u all
-RUN HTTPS_PROXY=https://10.30.0.10:3128 go get github.com/lib/pq github.com/go-gorp/gorp github.com/gorilla/mux
-RUN HTTPS_PROXY=https://10.30.0.10:3128 go install github.com/latitude-RESTsec-lab/api-gorilamux
+RUN go get github.com/lib/pq github.com/go-gorp/gorp github.com/gorilla/mux
+RUN go install github.com/restsec/api-gorilamux
 
 # Run the outyet command by default when the container starts.
-#RUN cp /go/src/github.com/latitude-RESTsec-lab/api-gingonic/config.json /go/bin/config.json
+#RUN cp /go/src/github.com/restsec/api-gingonic/config.json /go/bin/config.json
 
 ADD ./config.json .
 ADD ./devssl ./devssl
 
 EXPOSE 443
 ENTRYPOINT /go/bin/api-gorilamux
-# Document that the service listens on port 8080
+# Document that the service listens on port 443
 
